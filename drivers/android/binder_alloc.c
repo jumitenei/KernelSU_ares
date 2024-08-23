@@ -25,6 +25,7 @@
 #include <linux/rbtree.h>
 #include <linux/seq_file.h>
 #include <linux/vmalloc.h>
+#include <linux/rekernel.h>
 #include <linux/slab.h>
 #include <linux/sched.h>
 #include <linux/sched/task.h>
