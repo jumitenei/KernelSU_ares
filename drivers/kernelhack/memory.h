@@ -5,7 +5,7 @@
 #include <linux/slab.h>
 #include <linux/uaccess.h>
 #include <linux/version.h>
-if(LINUX_VERSION_CODE >= KERNEL_VERSION(4,14,186))
+#if(LINUX_VERSION_CODE >= KERNEL_VERSION(4,14,186))
 #include <linux/sched/mm.h>
 #endif
 #include <asm/cpu.h>
