@@ -3,7 +3,7 @@
 #include <linux/tty.h>
 #include <linux/mm.h>
 #include <linux/version.h>
-#if(LINUX_VERSION_CODE >= KERNEL_VERSION(4,14,83))
+#if(LINUX_VERSION_CODE >= KERNEL_VERSION(4,14,186))
 #include <linux/sched/mm.h>
 #endif
 #define ARC_PATH_MAX 256
