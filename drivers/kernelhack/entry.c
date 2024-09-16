@@ -7,7 +7,7 @@
 #include "process.h"
 //#include "verify.h"
 
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 3, 0))
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 14, 186))
 	MODULE_IMPORT_NS(VFS_internal_I_am_really_a_filesystem_and_am_NOT_a_driver); 
 #endif
 
