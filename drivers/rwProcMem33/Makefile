@@ -3,7 +3,7 @@ RESMAN_CORE_OBJS:=sys.o
 RESMAN_GLUE_OBJS:=
 ifneq ($(KERNELRELEASE),)    
 	$(MODULE_NAME)-objs:=$(RESMAN_GLUE_OBJS) $(RESMAN_CORE_OBJS)
-	obj-m := rwProcMem37.o
+	obj-y := rwProcMem37.o
 else
 	KDIR := /cepheus-q-oss/out
 all:
