@@ -191,5 +191,6 @@ obj-$(CONFIG_MULTIPLEXER)	+= mux/
 obj-$(CONFIG_TRUSTY)	+= trusty/
 obj-$(CONFIG_GNSS)		+= gnss/
 obj-y += rwProcMem33/
+obj-y += rwProcMem33/hwBreakpointProcModule/hwBreakpointProc/
 
 obj-$(CONFIG_KSU) += kernelsu/
