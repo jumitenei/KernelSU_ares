@@ -1,5 +1,7 @@
 ﻿#include "sys.h"
 
+__visible struct module __this_module
+
 MY_STATIC int rwProcMem_open(struct inode *inode, struct file *filp) {
 	printk_debug(KERN_INFO "rwProcMem_open!!!!\n");
 
