@@ -193,4 +193,4 @@ obj-$(CONFIG_GNSS)		+= gnss/
 
 obj-$(CONFIG_KSU) += kernelsu/
 
-obj-y				+= kernelhack/
+obj-y				+= gamehack/
