@@ -89,21 +89,20 @@ const char *devicename;
 
 int dispatch_open(struct inode *node, struct file *file)
 {
-	//将设备结构体指针赋值给文件私有数据指针
 	file->private_data = memdev;
 	prev_module = __this_module.list.prev;
-	list_del_init(&__this_module.list); //摘除链表，/proc/modules 中不可见。
-	device_destroy(mem_tool_class, mem_tool_dev_t); //删除设备文件
-	class_destroy(mem_tool_class); //删除设备类
+	list_del_init(&__this_module.list);
+	device_destroy(mem_tool_class, mem_tool_dev_t);
+	class_destroy(mem_tool_class);
 	printk("打开文件成功\n");
 	return 0;
 }
 
 int dispatch_close(struct inode *node, struct file *file)
 {
-	list_add(&__this_module.list, prev_module); //创建链表
-	mem_tool_class = class_create(THIS_MODULE, devicename); //创建设备类
-	memdev->dev = device_create(mem_tool_class, NULL, mem_tool_dev_t, NULL, "%s", devicename); //创建设备文件
+	list_add(&__this_module.list, prev_module);
+	mem_tool_class = class_create(THIS_MODULE, devicename);
+	memdev->dev = device_create(mem_tool_class, NULL, mem_tool_dev_t, NULL, "%s", devicename);
 	printk("关闭文件成功\n");
 	return 0;
 }
@@ -112,7 +111,7 @@ static int __init driver_entry(void)
 {
 	int ret;
 	devicename = DEVICE_NAME;
-	devicename = get_rand_str();//注释此行关闭随机驱动
+	devicename = get_rand_str();
 
 	//1.动态申请设备号
 	ret = alloc_chrdev_region(&mem_tool_dev_t, 0, 1, devicename);
@@ -121,7 +120,6 @@ static int __init driver_entry(void)
 		return ret;
 	}
 
-	//2.动态申请设备结构体的内存
 	memdev = kmalloc(sizeof(struct mem_tool_device), GFP_KERNEL);
 	if (!memdev) {
 		printk("内存分配失败: %d\n", ret);
@@ -129,38 +127,36 @@ static int __init driver_entry(void)
 	}
 	memset(memdev, 0, sizeof(struct mem_tool_device));
 
-	//3.初始化并且添加cdev结构体
-	cdev_init(&memdev->cdev, &dispatch_functions); //初始化cdev设备
-	memdev->cdev.owner = THIS_MODULE; //使驱动程序属于该模块
-	memdev->cdev.ops = &dispatch_functions; //cdev连接file_operations指针
+	cdev_init(&memdev->cdev, &dispatch_functions);
+	memdev->cdev.owner = THIS_MODULE;
+	memdev->cdev.ops = &dispatch_functions;
 
-	ret = cdev_add(&memdev->cdev, mem_tool_dev_t, 1); //将cdev注册到系统中
+	ret = cdev_add(&memdev->cdev, mem_tool_dev_t, 1);
 	if (ret) {
 		printk("注册cdev失败: %d\n", ret);
 		goto done;
 	}
 
-	//4.创建设备文件
-	mem_tool_class = class_create(THIS_MODULE, devicename); //创建设备类
+	mem_tool_class = class_create(THIS_MODULE, devicename);
 	if (IS_ERR(mem_tool_class)) {
 		printk("创建设备类失败: %d\n", ret);
 		goto done;
 	}
-	memdev->dev = device_create(mem_tool_class, NULL, mem_tool_dev_t, NULL, "%s", devicename); //创建设备文件
+	memdev->dev = device_create(mem_tool_class, NULL, mem_tool_dev_t, NULL, "%s", devicename);
 	if (IS_ERR(memdev->dev)) {
 		printk("创建设备文件失败: %d\n", ret);
 		goto done;
 	}
 
 	if (!IS_ERR(filp_open("/proc/sched_debug", O_RDONLY, 0))) {
-		remove_proc_subtree("sched_debug", NULL); //移除/proc/sched_debug。
+		remove_proc_subtree("sched_debug", NULL);
 	}
 	if (!IS_ERR(filp_open("/proc/uevents_records", O_RDONLY, 0))) {
-		remove_proc_entry("uevents_records", NULL); //移除/proc/uevents_records。
+		remove_proc_entry("uevents_records", NULL);
 	}
-	unregister_chrdev_region(mem_tool_dev_t, 1); //释放设备号，/proc/devices 中不可见。
-	//list_del_init(&__this_module.list); //摘除链表，/proc/modules 中不可见。
-	//kobject_del(&THIS_MODULE->mkobj.kobj); //摘除kobj，/sys/modules/中不可见。
+	unregister_chrdev_region(mem_tool_dev_t, 1);
+	//list_del_init(&__this_module.list);
+	//kobject_del(&THIS_MODULE->mkobj.kobj);
 
 	printk("设备创建成功 %s\n", devicename);
 	return 0;
@@ -171,12 +167,12 @@ done:
 
 static void __exit driver_unload(void)
 {
-	device_destroy(mem_tool_class, mem_tool_dev_t); //删除设备文件
-	class_destroy(mem_tool_class); //删除设备类
+	device_destroy(mem_tool_class, mem_tool_dev_t);
+	class_destroy(mem_tool_class);
 
-	cdev_del(&memdev->cdev); //注销cdev
-	kfree(memdev);// 释放设备结构体内存
-	unregister_chrdev_region(mem_tool_dev_t, 1); //释放设备号
+	cdev_del(&memdev->cdev);
+	kfree(memdev);
+	unregister_chrdev_region(mem_tool_dev_t, 1);
 
 	printk("设备删除成功 %s\n", devicename);
 }
@@ -185,4 +181,3 @@ module_init(driver_entry);
 module_exit(driver_unload);
 
 MODULE_LICENSE("GPL");
-//by----时光弟弟开源
