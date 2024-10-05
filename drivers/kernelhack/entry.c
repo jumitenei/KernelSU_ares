@@ -81,6 +81,7 @@ struct mem_tool_device {
 	int max;
 };
 static struct mem_tool_device *memdev;
+static int __init my_module_init(void) {
 static struct list_head *prev_module;
 static dev_t mem_tool_dev_t;
 static struct class *mem_tool_class;
