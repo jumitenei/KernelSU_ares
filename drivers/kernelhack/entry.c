@@ -3,6 +3,7 @@
 #include <linux/miscdevice.h>
 #include <linux/proc_fs.h>
 #include <linux/module.h>
+#include <linux/list.h>
 #include "comm.h"
 #include "memory.h"
 #include "process.h"
